@@ -33,13 +33,13 @@ if FORMAT:match "latex" then
     local transform = false
 
     local tr = {}
-    trs["?"]    = "gls"
-    trs["??"]   = "Gls"
-    trs["?*"]   = "glspl"
-    trs["??*"]  = "Glspl"
-    trs[">"]    = "acrshort"
-    trs[">>"]   = "acrlong"
-    trs[">>>"]  = "acrfull"
+    tr["?"]    = "gls"
+    tr["??"]   = "Gls"
+    tr["?*"]   = "glspl"
+    tr["??*"]  = "Glspl"
+    tr[">"]    = "acrshort"
+    tr[">>"]   = "acrlong"
+    tr[">>>"]  = "acrfull"
 
     function Str(el)
         if transform then return pandoc.RawInLine(
@@ -48,20 +48,21 @@ if FORMAT:match "latex" then
                     return string.format("%s\\%s{%s}%s", a, tr[b], c, d)
                 end
             )
-        )        
+        )
+        end
     end
 
     function Meta(m)
         if io.open(m.glossary) ~= nil then
-            m["header-includes"] = [
+            m["header-includes"] = {
                 '\\usepackage[acronym,toc]{glossaries}',
                 '\\makeglossaries',
                 string.format('\\include{%s}', m.glossary)
-            ]
-            m["include-after"] = [
+            }
+            m["include-after"] = {
                 '\\printglossary', 
                 '\\printglossary[type=\\acronymtype]'
-            ]
+            }
         end
     end
 

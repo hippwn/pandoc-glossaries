@@ -8,15 +8,15 @@ hereinafter and the LaTeX syntax provided by the package.
 
 The following syntax will be recognized in your document.
 
-| Syntax     | Equivalence   | Description                       |
-| ---------- | ------------- | --------------------------------- |
-| (?: foo)   | `\gls{}`      | Expand entry                      |
-| (??: foo)  | `\Gls{}`      | Expand capitalized                |
-| (?*: foo)  | `\glspl{}`    | Expand to plural form             |
-| (??*: foo) | `\Glspl{}`    | Expand to capitalized plural form |
-| (>: bar)   | `\acrshort{}` | Expand acronym                    |
-| (>>: bar)  | `\acrlong{}`  | Expand to acronym meaning         |
-| (>>>: bar) | `\acrfull{}`  | Expand to acronym full form       |
+| Syntax       | Equivalence   | Description                       |
+| ------------ | ------------- | --------------------------------- |
+| `(?: foo)`   | `\gls{}`      | Expand entry                      |
+| `(??: foo)`  | `\Gls{}`      | Expand capitalized                |
+| `(?*: foo)`  | `\glspl{}`    | Expand to plural form             |
+| `(??*: foo)` | `\Glspl{}`    | Expand to capitalized plural form |
+| `(>: bar)`   | `\acrshort{}` | Expand acronym                    |
+| `(>>: bar)`  | `\acrlong{}`  | Expand to acronym meaning         |
+| `(>>>: bar)` | `\acrfull{}`  | Expand to acronym full form       |
 
 > **Note:** The *space* is optional: both `(?: foo)` and `(?:foo)` will be
 rendered the same way.
