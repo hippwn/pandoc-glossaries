@@ -14,15 +14,15 @@ Usage:
 
 Translations:
 
-| Syntax     | Equivalence   | Description                       |
-| ---------- | ------------- | --------------------------------- |
-| (?: foo)   | `\gls{}`      | Expand entry                      |
-| (??: foo)  | `\Gls{}`      | Expand capitalized                |
-| (?*: foo)  | `\glspl{}`    | Expand to plural form             |
-| (??*: foo) | `\Glspl{}`    | Expand to capitalized plural form |
-| (>: bar)   | `\acrshort{}` | Expand acronym                    |
-| (>>: bar)  | `\acrlong{}`  | Expand to acronym meaning         |
-| (>>>: bar) | `\acrfull{}`  | Expand to acronym full form       |
+| Syntax    | Equivalence   | Description                       |
+| --------- | ------------- | --------------------------------- |
+| (?:foo)   | `\gls{}`      | Expand entry                      |
+| (?:Foo)   | `\Gls{}`      | Expand capitalized                |
+| (?*:foo)  | `\glspl{}`    | Expand to plural form             |
+| (?*:Foo)  | `\Glspl{}`    | Expand to capitalized plural form |
+| (>:bar)   | `\acrshort{}` | Expand acronym                    |
+| (>>:bar)  | `\acrlong{}`  | Expand to acronym meaning         |
+| (>>>:bar) | `\acrfull{}`  | Expand to acronym full form       |
 
 ]]-----------------------------------------------------------------------------
 
@@ -30,45 +30,40 @@ Translations:
 -- Only run for LaTeX output
 if FORMAT:match "latex" then
 
-    local transform = false
+    local t = {}
+    t["?"]    = "gls"
+    t["?*"]   = "glspl"
+    t[">"]    = "acrshort"
+    t[">>"]   = "acrlong"
+    t[">>>"]  = "acrfull"
 
-    local tr = {}
-    tr["?"]    = "gls"
-    tr["??"]   = "Gls"
-    tr["?*"]   = "glspl"
-    tr["??*"]  = "Glspl"
-    tr[">"]    = "acrshort"
-    tr[">>"]   = "acrlong"
-    tr[">>>"]  = "acrfull"
+    local tr = function (a, b, c, d)
+        b = t[b]
+        if c:gmatch('%u')() then
+            b = (b:gsub("^%l", string.upper)) -- first letter to upper
+        end
+        return string.format("%s\\%s{%s}%s", a, b, c:lower(), d)
+    end
 
     function Str(el)
-        if transform then return pandoc.RawInLine(
-            'latex',
-            el.text:gsub("(%S*)%(([?>*]+):%s?(%l+))(%S*)", function (a, b, c, d)
-                    return string.format("%s\\%s{%s}%s", a, tr[b], c, d)
-                end
-            )
-        )
+        local str, s = el.text:gsub("(%S*)%(([?>*]+):(%l+)%)(%S*)", tr)
+        if s ~= 0 then
+            return pandoc.RawInline('latex', str)
         end
     end
 
     function Meta(m)
-        if io.open(m.glossary) ~= nil then
-            m["header-includes"] = {
-                '\\usepackage[acronym,toc]{glossaries}',
-                '\\makeglossaries',
-                string.format('\\include{%s}', m.glossary)
-            }
-            m["include-after"] = {
-                '\\printglossary', 
-                '\\printglossary[type=\\acronymtype]'
-            }
+        if type(m.glossaries.path) == 'table' and m.glossaries.path.t == 'MetaInlines' then
+            local path = pandoc.utils.stringify(m.glossaries.path)
+            if io.open(path) == nil then
+                error(string.format("%s: no such file", path))
+            end
         end
     end
 
     return {
-        { Meta  = Meta  },
-        { Str   = Str   }
+        { Meta  = Meta },
+        { Str   = Str   },
     }
 
 end
