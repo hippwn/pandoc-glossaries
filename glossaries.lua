@@ -53,7 +53,7 @@ if FORMAT:match "latex" then
     end
 
     function Meta(m)
-        if type(m.glossaries.path) == 'table' and m.glossaries.path.t == 'MetaInlines' then
+        if m.glossaries and type(m.glossaries.path) == 'table' and m.glossaries.path.t == 'MetaInlines' then
             local path = pandoc.utils.stringify(m.glossaries.path)
             if io.open(path) == nil then
                 error(string.format("%s: no such file", path))

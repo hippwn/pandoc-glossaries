@@ -8,18 +8,19 @@ hereinafter and the LaTeX syntax provided by the package.
 
 The following syntax will be recognized in your document.
 
-| Syntax       | Equivalence   | Description                       |
-| ------------ | ------------- | --------------------------------- |
-| `(?: foo)`   | `\gls{}`      | Expand entry                      |
-| `(??: foo)`  | `\Gls{}`      | Expand capitalized                |
-| `(?*: foo)`  | `\glspl{}`    | Expand to plural form             |
-| `(??*: foo)` | `\Glspl{}`    | Expand to capitalized plural form |
-| `(>: bar)`   | `\acrshort{}` | Expand acronym                    |
-| `(>>: bar)`  | `\acrlong{}`  | Expand to acronym meaning         |
-| `(>>>: bar)` | `\acrfull{}`  | Expand to acronym full form       |
+| Syntax      | Equivalence   | Description                       |
+| ----------- | ------------- | --------------------------------- |
+| `(?:foo)`   | `\gls{}`      | Expand entry                      |
+| `(?:Foo)`   | `\Gls{}`      | Expand capitalized                |
+| `(?*:foo)`  | `\glspl{}`    | Expand to plural form             |
+| `(?*:Foo)`  | `\Glspl{}`    | Expand to capitalized plural form |
+| `(>:bar)`   | `\acrshort{}` | Expand acronym                    |
+| `(>>:bar)`  | `\acrlong{}`  | Expand to acronym meaning         |
+| `(>>>:bar)` | `\acrfull{}`  | Expand to acronym full form       |
 
-> **Note:** The *space* is optional: both `(?: foo)` and `(?:foo)` will be
-rendered the same way.
+> **Note:** Using `(?:Foo)`, `(?:foO)` or `(?:FOO)` will yield to the same
+> behavior
+> **Note:** Labels can only only be lowercase characters in your glossary.
 
 ## Usage
 
@@ -43,6 +44,32 @@ $ mkdir -p .local/share/pandoc/filters
 
 $ curl -Lo .local/share/pandoc/filters/glossaries.lua https://raw.githubusercontent.com/hippwn/pandoc-glossaries/master/glossaries.lua
 ```
+
+## Tips
+
+You can add highlighting over the syntax provided here with the
+[Hilighting](https://github.com/fabiospampinato/vscode-highlight) extension by
+adding the following to your user settings:
+
+```json
+{
+    "highlight.regexes": {
+        "(\\()([?>*]+)(:)([a-z]+)(\\))": [ 
+            {}, // opening parenthesis
+            {   // operators
+                "textDecoration": "underline"
+            },
+            {}, // colon
+            {   // label
+                "color": "#CE9178"
+            },
+            {}  // closing parenthesis
+        ]
+    }
+}
+```
+
+You can use the *scope inspector* to find the colors used by your color theme.
 
 ## Credits
 
