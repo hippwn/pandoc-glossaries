@@ -32,7 +32,7 @@ if FORMAT:match "latex" then
 
     local t = {}
     t["?"]    = "gls"
-    t["?*"]   = "glspl"
+    t["?s"]   = "glspl"
     t[">"]    = "acrshort"
     t[">>"]   = "acrlong"
     t[">>>"]  = "acrfull"
@@ -46,7 +46,7 @@ if FORMAT:match "latex" then
     end
 
     function Str(el)
-        local str, s = el.text:gsub("(%S*)%(([?>*]+):(%a+)%)(%S*)", tr)
+        local str, s = el.text:gsub("(%S*)%(([?>s]+):(%a+)%)(%S*)", tr)
         if s ~= 0 then
             return pandoc.RawInline('latex', str)
         end
