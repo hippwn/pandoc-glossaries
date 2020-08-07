@@ -46,7 +46,7 @@ if FORMAT:match "latex" then
     end
 
     function Str(el)
-        local str, s = el.text:gsub("(%S*)%(([?>*]+):(%l+)%)(%S*)", tr)
+        local str, s = el.text:gsub("(%S*)%(([?>*]+):(%a+)%)(%S*)", tr)
         if s ~= 0 then
             return pandoc.RawInline('latex', str)
         end
